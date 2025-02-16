@@ -1,2 +1,11 @@
-<h1>Ingredients#calculate</h1>
-<p>Find me in app/views/ingredients/calculate.html.erb</p>
+<h1>カロリー計算結果</h1>
+
+<ul>
+  <% @selected_ingredients.each do |ingredient| %>
+    <li><%= ingredient.name %>: <%= ingredient.calories %> kcal</li>
+  <% end %>
+</ul>
+
+<h2>合計カロリー: <%= @total_calories %> kcal</h2>
+
+<a href="<%= root_path %>">リセット</a>
