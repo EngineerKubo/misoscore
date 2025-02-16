@@ -1,2 +1,29 @@
-<h1>Ingredients#index</h1>
-<p>Find me in app/views/ingredients/index.html.erb</p>
+<h1>お味噌汁の具材を選んでください</h1>
+
+<form action="<%= calculate_path %>" method="post">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+  <input type="text" id="search" placeholder="具材名で検索">
+
+  <ul id="ingredient-list">
+    <% @ingredients.each do |ingredient| %>
+      <li>
+        <label>
+          <input type="checkbox" name="ingredients[]" value="<%= ingredient.name %>">
+          <%= ingredient.name %> (<%= ingredient.calories %> kcal)
+        </label>
+      </li>
+    <% end %>
+  </ul>
+
+  <button type="submit">計算する</button>
+</form>
+
+<script>
+document.getElementById('search').addEventListener('input', function() {
+  let query = this.value.toLowerCase();
+  document.querySelectorAll('#ingredient-list li').forEach(li => {
+    li.style.display = li.innerText.toLowerCase().includes(query) ? '' : 'none';
+  });
+});
+</script>
