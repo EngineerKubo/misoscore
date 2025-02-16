@@ -1,6 +1,7 @@
 class IngredientsController < ApplicationController
   def index
     @ingredients = Ingredient.all
+    Rails.logger.debug "Ingredients Data: #{@ingredients.inspect}"
   end
 
   def calculate
