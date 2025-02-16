@@ -1,6 +1,6 @@
 <h1>お味噌汁の具材を選んでください</h1>
 
-<form action="<%= calculate_path %>" method="post">
+<form action="<%= ingredients_calculate_path %>" method="post">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
 
   <input type="text" id="search" placeholder="具材名で検索">
