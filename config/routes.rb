@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
   root 'ingredients#index'
-  post 'calculate', to: 'ingredients#calculate'
-
-  get "up" => "rails/health#show", as: :rails_health_check
+  post 'ingredients/calculate', to: 'ingredients#calculate'
 end
