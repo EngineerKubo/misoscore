@@ -1,24 +1,58 @@
-# README
+# MisoScore
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## プロジェクト概要
 
-Things you may want to cover:
+MisoScore は、お味噌汁の具材を選択して合計カロリーを計算できるシンプルな Web アプリです。データベースを使用せず、CSV ファイルから具材情報を読み込んで表示します。
 
-* Ruby version
+## セットアップ方法
 
-* System dependencies
+### 必要な環境
 
-* Configuration
+- Ruby 3.x
+- Rails 7.1.0
 
-* Database creation
+### インストール手順
 
-* Database initialization
+```sh
+# リポジトリをクローン
+git clone https://github.com/your-repository/misoscore.git
+cd misoscore
 
-* How to run the test suite
+# 必要なGemをインストール
+bundle install
 
-* Services (job queues, cache servers, search engines, etc.)
+# サーバー起動
+rails server
+```
 
-* Deployment instructions
+## アプリの使い方
 
-* ...
+1. トップページでお味噌汁の具材を選択する
+2. 「計算する」ボタンを押す
+3. カロリー計算結果画面で合計カロリーを確認する
+4. 「再選択する」ボタンでトップページに戻る
+
+## CSV データフォーマット
+
+具材データは `db/Ingredients.csv` に格納され、以下のフォーマットで記述します。
+
+```
+食品名,エネルギー（kcal）
+豆腐,56
+わかめ,12
+大根,18
+```
+
+※ カラム名は「食品名」と「エネルギー（kcal）」が必須です。
+
+## 技術スタック
+
+- Ruby on Rails 7.1.0
+- ERB（テンプレートエンジン）
+- HTML / CSS（シンプルなデザイン）
+
+## 今後の改善点（任意）
+
+- 具材のカロリー計算に詳細な栄養情報を追加
+- ユーザーが具材を追加・編集できる機能の実装
+- スマホ対応のデザイン調整
