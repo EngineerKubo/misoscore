@@ -13,18 +13,13 @@ class Ingredient
     ingredients = []
 
     CSV.foreach(file_path, headers: true, encoding: 'UTF-8') do |row|
-      # デバッグ用のログを出力
-      Rails.logger.debug "CSV Row: #{row.to_h}"
 
-      # ヘッダーのカラム名を確認して適切に取得
-      name = row['食品名'] || row['name'] || row[0]  # カラム名が違う場合に対応
-      calories = row['エネルギー（kcal）'] || row['calories'] || row[1] # カラム名が違う場合に対応
+      # Rails.logger.debug "CSV Row: #{row.to_h}"
 
-      if name && calories
-        ingredients << Ingredient.new(name, calories)
-      else
-        Rails.logger.warn "Skipping row due to missing values: #{row.to_h}"
-      end
+      name = row['食品名'] || row[0]
+      calories = row['エネルギー（kcal）'] || row[1]
+
+      ingredients << Ingredient.new(name, calories) if name && calories
     end
 
     ingredients
