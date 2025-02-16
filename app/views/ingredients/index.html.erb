@@ -3,8 +3,6 @@
 <form action="<%= ingredients_calculate_path %>" method="post" data-turbo="false">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
 
-  <input type="text" id="search" placeholder="具材名で検索">
-
   <ul id="ingredient-list">
     <% @ingredients.each do |ingredient| %>
       <li>
@@ -16,14 +14,5 @@
     <% end %>
   </ul>
 
-  <button type="submit">計算する</button>
+  <button type="submit" class="button">計算する</button>
 </form>
-
-<script>
-document.getElementById('search').addEventListener('input', function() {
-  let query = this.value.toLowerCase();
-  document.querySelectorAll('#ingredient-list li').forEach(li => {
-    li.style.display = li.innerText.toLowerCase().includes(query) ? '' : 'none';
-  });
-});
-</script>
