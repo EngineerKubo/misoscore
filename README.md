@@ -51,8 +51,82 @@ rails server
 - ERB（テンプレートエンジン）
 - HTML / CSS（シンプルなデザイン）
 
-## 今後の改善点（任意）
+## ソースコード解説
 
-- 具材のカロリー計算に詳細な栄養情報を追加
-- ユーザーが具材を追加・編集できる機能の実装
-- スマホ対応のデザイン調整
+### 1. CSV データの読み込み
+
+`app/models/ingredient.rb` では、`db/Ingredients.csv` から具材データを読み込み、オブジェクトとして管理します。
+
+```ruby
+require 'csv'
+
+class Ingredient
+  attr_reader :name, :calories
+
+  def initialize(name, calories)
+    @name = name
+    @calories = calories.to_f
+  end
+
+  def self.all
+    file_path = Rails.root.join('db', 'Ingredients.csv')
+    ingredients = []
+
+    CSV.foreach(file_path, headers: true, encoding: 'UTF-8') do |row|
+      name = row['食品名'] || row[0]
+      calories = row['エネルギー（kcal）'] || row[1]
+      ingredients << Ingredient.new(name, calories) if name && calories
+    end
+
+    ingredients
+  end
+end
+```
+
+#### 説明
+
+- `CSV.foreach` を使用して CSV データを行ごとに読み込みます。
+- `Ingredient.new` でオブジェクト化し、リストに格納します。
+- 必要なデータのみを配列 `ingredients` に保存し、取得できるようにします。
+
+### 2. カロリー計算
+
+`app/controllers/ingredients_controller.rb` の `calculate` メソッドでは、選択した具材のカロリー合計を計算します。
+
+```ruby
+def calculate
+  selected_names = params[:ingredients] || []
+  @selected_ingredients = Ingredient.all.select { |ing| selected_names.include?(ing.name) }
+  @total_calories = @selected_ingredients.sum(&:calories)
+  render 'calculate'
+end
+```
+
+#### 説明
+
+- フォームから受け取った具材名のリストを `selected_names` に格納します。
+- `Ingredient.all` から、選択された具材のみを `@selected_ingredients` に抽出します。
+- `sum(&:calories)` で合計カロリーを計算します。
+
+### 3. バリデーションの実装
+
+バリデーションを追加することで、データの整合性を確保します。`app/models/ingredient.rb` では、具材名とカロリーのバリデーションを設定しています。
+
+```ruby
+class Ingredient
+  include ActiveModel::Model
+
+  attr_accessor :name, :calories
+
+  validates :name, presence: true
+  validates :calories, presence: true, numericality: { greater_than_or_equal_to: 0 }
+end
+```
+
+#### 説明
+
+- `ActiveModel::Model` を利用し、バリデーションを適用できるようにします。
+- `validates :name, presence: true` で、具材名が空でないことを保証します。
+- `validates :calories, presence: true, numericality: { greater_than_or_equal_to: 0 }` で、カロリーが数値であり、0 以上であることを確認します。
+
+このようにして、アプリのデータが正しく管理されるように設計されています。
