@@ -14,12 +14,17 @@ class Ingredient
 
     CSV.foreach(file_path, headers: true, encoding: 'UTF-8') do |row|
 
-      # Rails.logger.debug "CSV Row: #{row.to_h}"
-
       name = row['食品名'] || row[0]
       calories = row['エネルギー（kcal）'] || row[1]
 
-      ingredients << Ingredient.new(name, calories) if name && calories
+      next if name.nil? || name.strip.empty?
+
+      if calories.nil? || !(calories.to_s =~ /\A\d+(\.\d+)?\z/)
+        Rails.logger.warn "無効なカロリー値: #{calories} (具材: #{name})"
+        next
+      end
+
+      ingredients << Ingredient.new(name, calories)
     end
 
     ingredients
